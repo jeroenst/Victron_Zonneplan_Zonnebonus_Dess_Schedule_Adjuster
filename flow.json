@@ -3,7 +3,7 @@
         "id": "d7b06853644b688b",
         "type": "group",
         "z": "28b7874e5f70d147",
-        "name": "Set battery discharge restrictions based on sunrise sunset - maximize Sun generation",
+        "name": "Set Victron Dess Sell Price Schedule based on sunrise sunset - for Zonneplan Zonnebonus",
         "style": {
             "label": true
         },
