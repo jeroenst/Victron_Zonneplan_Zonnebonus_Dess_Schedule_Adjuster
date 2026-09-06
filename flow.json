@@ -55,7 +55,7 @@
         "z": "28b7874e5f70d147",
         "g": "d7b06853644b688b",
         "name": "All object debug",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -73,8 +73,8 @@
         "z": "28b7874e5f70d147",
         "g": "d7b06853644b688b",
         "name": "Set Your Location coordinates here",
-        "lat": "51.370145",
-        "lon": "5.257796",
+        "lat": "52.1007",
+        "lon": "5.1775",
         "replay": false,
         "ejectScheduleOnUpdate": false,
         "sunrisePayload": "1",
@@ -189,7 +189,7 @@
         "z": "28b7874e5f70d147",
         "g": "d7b06853644b688b",
         "name": "Set sellPriceFormulaSchedule based on sunrise sunset",
-        "func": "const suncronData = msg;\nlet returnmsg = {};\n\nif (suncronData && suncronData.schedule && suncronData.schedule.sunrise && suncronData.schedule.sunset) {\n  const sunriseTime = new Date(suncronData.schedule.sunrise.sunEventTime);\n  const sunsetTime = new Date(suncronData.schedule.sunset.sunEventTime);\n\n  // Helper function to round a date to the nearest 15-minute interval\n  const floorToQuarter = (date) => {\n    const minutes = date.getMinutes();\n    const floorMinutes = Math.round(minutes / 15) * 15;\n\n    let floorDate = new Date(date);\n    floorDate.setMinutes(floorMinutes);\n    floorDate.setSeconds(0);\n    floorDate.setMilliseconds(0);\n    \n    return floorDate;\n  };\n  \n  const ceilToQuarter = (date) => {\n    let ceilDate = floorToQuarter(date);\n    ceilDate.setTime(ceilDate.getTime() + (15 * 60 * 1000));\n\n    return ceilDate;\n  }\n\n  // Helper for START times (Exactly on the quarter hour: e.g., 06:45)\n  const formatStartTime = (date) => {\n    return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;\n  };\n\n  // Generate the formatted start and end times\n  const sunrise = formatStartTime(ceilToQuarter(sunriseTime)); // e.g., \"06:45\"\n  const sunset  = formatStartTime(floorToQuarter(sunsetTime));  // e.g., \"20:15\"\n\n  const schedule = [\n    {\n      to: sunrise,\n      from: \"00:00\",\n      formula: \"p+0.01652\"\n    },\n    {\n      to: sunset,\n      from: sunrise,\n      formula: \"p*1.1+0.01652\"\n    },\n    {\n      to: \"00:00\",\n      from: sunset,\n      formula: \"p+0.01652\"\n    }\n  ];\n\n  const completeSchedule = [\n    {\n      days: [0, 1, 2, 3, 4, 5, 6],\n      schedule: schedule\n    }\n  ];\n\n  // Map the stringified schedules to the required VRM API parameters\n  returnmsg.payload = {\n        \"sellPriceFormulaSchedule\" : JSON.stringify(completeSchedule)\n  };\n\n  return returnmsg;\n} else {\n  node.warn(\"Invalid or unavailable suncron data, check 'schedule', 'sunrise', and 'sunset'.\");\n  return null;\n}\n",
+        "func": "const suncronData = msg;\nlet returnmsg = {};\n\nif (suncronData && suncronData.schedule && suncronData.schedule.sunrise && suncronData.schedule.sunset) {\n  const sunriseTime = new Date(suncronData.schedule.sunrise.sunEventTime);\n  const sunsetTime = new Date(suncronData.schedule.sunset.sunEventTime);\n\n  // Helper function to round a date to the nearest 15-minute interval\n  const floorToQuarter = (date) => {\n    const minutes = date.getMinutes();\n    const floorMinutes = Math.round(minutes / 15) * 15;\n\n    let floorDate = new Date(date);\n    floorDate.setMinutes(floorMinutes);\n    floorDate.setSeconds(0);\n    floorDate.setMilliseconds(0);\n    \n    return floorDate;\n  };\n  \n  const ceilToQuarter = (date) => {\n    let ceilDate = floorToQuarter(date);\n    ceilDate.setTime(ceilDate.getTime() + (15 * 60 * 1000));\n\n    return ceilDate;\n  }\n\n  // Helper for START times (Exactly on the quarter hour: e.g., 06:45)\n  const formatStartTime = (date) => {\n    return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;\n  };\n\n  // Generate the formatted start and end times\n  // Acccording to https://jeroen.nl/dynamische-energie/aanbieders/zonneplan\n  // the start of sunbonus is at the beginning of the quarter when the sun is partly visible\n  // and the end of sunbonus is at the end of the quarter when the sun disappears completely\n  const sunrise = formatStartTime(floorToQuarter(sunriseTime)); // e.g., \"06:45\"\n  const sunset  = formatStartTime(ceilToQuarter(sunsetTime));  // e.g., \"20:15\"\n\n  const schedule = [\n    {\n      to: sunrise,\n      from: \"00:00\",\n      formula: \"p+0.01652\"\n    },\n    {\n      to: sunset,\n      from: sunrise,\n      formula: \"p*1.1+0.01652\"\n    },\n    {\n      to: \"00:00\",\n      from: sunset,\n      formula: \"p+0.01652\"\n    }\n  ];\n\n  const completeSchedule = [\n    {\n      days: [0, 1, 2, 3, 4, 5, 6],\n      schedule: schedule\n    }\n  ];\n\n  // Map the stringified schedules to the required VRM API parameters\n  returnmsg.payload = {\n        \"sellPriceFormulaSchedule\" : JSON.stringify(completeSchedule)\n  };\n\n  return returnmsg;\n} else {\n  node.warn(\"Invalid or unavailable suncron data, check 'schedule', 'sunrise', and 'sunset'.\");\n  return null;\n}\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -244,7 +244,7 @@
         "name": ""
     },
     {
-        "id": "46484b48f4e072c8",
+        "id": "10f315e7d8d2a641",
         "type": "global-config",
         "env": [],
         "modules": {
