@@ -72,7 +72,7 @@
         "type": "suncron",
         "z": "28b7874e5f70d147",
         "g": "d7b06853644b688b",
-        "name": "Set Your Location coordinates here",
+        "name": "Center of The Netherlands",
         "lat": "52.1007",
         "lon": "5.1775",
         "replay": false,
@@ -175,7 +175,7 @@
         "dawnOffsetHours": 0,
         "dawnOffsetMinutes": 0,
         "dawnOffset": 0,
-        "x": 300,
+        "x": 280,
         "y": 240,
         "wires": [
             [
@@ -244,7 +244,7 @@
         "name": ""
     },
     {
-        "id": "10f315e7d8d2a641",
+        "id": "2b5bd863cffce7c7",
         "type": "global-config",
         "env": [],
         "modules": {
